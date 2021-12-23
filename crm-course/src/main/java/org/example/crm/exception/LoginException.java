@@ -1,4 +1,4 @@
-package org.example.crm.settings.exception;
+package org.example.crm.exception;
 
 public class LoginException extends Exception{
 
