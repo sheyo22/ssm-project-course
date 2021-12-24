@@ -5,12 +5,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(LoginException.class)
     @ResponseBody
-    public String doLoginException(Exception e){
+    public Map doLoginException(Exception e){
         e.printStackTrace();
-        return e.getMessage();
+        Map map = new HashMap();
+        map.put("msg",e.getMessage());
+        return map;
     }
 }

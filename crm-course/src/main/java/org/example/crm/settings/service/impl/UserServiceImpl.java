@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
             throw new LoginException("该账号已被锁定");
         if(!user.getAllowIps().contains(ip))
             throw new LoginException("不被允许访问的ip地址");
-        if(user.getExpireTime().compareTo(DateTimeUtil.getSysTime())<0)
+        if(user.getExpireTime().compareTo(DateTimeUtil.getSysTime())>0)
             throw new LoginException("该账号已失效");
         return users.get(0);
     }
