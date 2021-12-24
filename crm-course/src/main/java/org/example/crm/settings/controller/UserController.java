@@ -1,12 +1,29 @@
 package org.example.crm.settings.controller;
 
+import org.example.crm.exception.LoginException;
+import org.example.crm.settings.domain.User;
 import org.example.crm.settings.service.UserService;
+import org.example.crm.utils.DateTimeUtil;
+import org.example.crm.utils.MD5Util;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class UserController {
     @Resource
-    private UserService service;
+    private UserService userService;
+    @RequestMapping("user/login.do")
+    @ResponseBody
+    public String login(String loginAct, String loginPwd, HttpServletRequest request) throws LoginException {
+        System.out.println("login.do");
+        loginPwd = MD5Util.getMD5(loginPwd);
+        String ip=request.getRemoteAddr();
+        User user = userService.login(loginAct,loginPwd,ip);
+        request.getSession().setAttribute("user",user);
+        return "true";
+    }
 }

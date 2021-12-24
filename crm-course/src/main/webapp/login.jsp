@@ -13,8 +13,39 @@
 	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function () {
-			$(window).key
+			$("#loginAct").focus()
+			$("#submit").click(function () {
+				login()
+			})
+			$(window).keydown(function (e) {
+				if(e.keyCode==13)
+					$("#submit").click()
+			})
 		})
+		function login() {
+			var loginAct=$.trim($("#loginAct").val());
+			var loginPwd=$.trim($("#loginPwd").val());
+			if(loginAct==""||loginPwd==""){
+				$("#msg").html("账号密码不能为空")
+				return false
+			}
+			$.ajax({
+				url:"user/login.do",
+				data:{
+					loginAct:loginAct,
+					loginPwd:loginPwd
+				},
+				type:"post",
+				success:function (data) {
+					alert(data)
+					if(data=="true"){
+						window.location.href="workbench/index.html";
+					}else{
+						$("#msg").val(data)
+					}
+				}
+			})
+		}
 	</script>
 </head>
 <body>
@@ -33,17 +64,17 @@
 			<form action="workbench/index.html" class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
 					<div style="width: 350px;">
-						<input class="form-control" type="text" placeholder="用户名">
+						<input id="loginAct" class="form-control" type="text" placeholder="用户名">
 					</div>
 					<div style="width: 350px; position: relative;top: 20px;">
-						<input class="form-control" type="password" placeholder="密码">
+						<input id="loginPwd" class="form-control" type="password" placeholder="密码">
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 						
-							<span id="msg"></span>
+							<span id="msg" style="color: red"></span>
 						
 					</div>
-					<button type="submit" class="btn btn-primary btn-lg btn-block"  style="width: 350px; position: relative;top: 45px;">登录</button>
+					<button id="submit" type="button" class="btn btn-primary btn-lg btn-block"  style="width: 350px; position: relative;top: 45px;">登录</button>
 				</div>
 			</form>
 		</div>
