@@ -39,8 +39,18 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
+    <filter>
+        <filter-name>loginFilter</filter-name>
+        <filter-class>org.example.crm.filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>loginFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>*.do</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
 </web-app>

@@ -22,7 +22,6 @@ public class UserController {
     @RequestMapping(value = "user/login.do")
     @ResponseBody
     public Map login(String loginAct, String loginPwd, HttpServletRequest request) throws LoginException {
-        System.out.println("login.do");
         loginPwd = MD5Util.getMD5(loginPwd);
         String ip=request.getRemoteAddr();
         System.out.println("ip:"+ip);
