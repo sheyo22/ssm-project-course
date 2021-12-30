@@ -18,7 +18,10 @@ request.getServerPort() + request.getContextPath() + "/";
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script type="text/javascript">
-	$(function () {
+
+	$(function(){
+
+		alert("jquery");
 		$("#addBtn").click(function () {
 			$.ajax({
 				url:"workbench/activity/getUserList.do",
@@ -26,17 +29,19 @@ request.getServerPort() + request.getContextPath() + "/";
 				dataType:"json",
 				success:function (data) {
 					//每一个n就是一个对象
-					var html;
+					alert("ajax")
+					var html
 					$.each(data,function (i,n) {
-						html+="<option value='"+n.id+"'>"+n.name+"</option>";
+						html+="<option value='"+n.id+"'>"+n.name+"</option>"
 					})
-					$("#create-marketActivityOwner").html(html);
-					$("create-marketActivityOwner").val(${user.id});
-					$("#createActivityModal").modal("show");
+					$("#create-marketActivityOwner").html(html)
+					$("create-marketActivityOwner").val(${user.id})
+					$("#createActivityModal").modal("show")
 				}
 			})
 		})
 	})
+
 </script>
 </head>
 <body>
@@ -59,7 +64,9 @@ request.getServerPort() + request.getContextPath() + "/";
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-marketActivityOwner">
-
+								  <option>zhangsan</option>
+								  <option>lisi</option>
+								  <option>wangwu</option>
 								</select>
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
