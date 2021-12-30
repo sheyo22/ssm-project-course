@@ -19,7 +19,7 @@ import java.util.Map;
 public class UserController {
     @Resource
     private UserService userService;
-    @RequestMapping(value = "user/login.do")
+    @RequestMapping(value = "/user/login.do")
     @ResponseBody
     public Map login(String loginAct, String loginPwd, HttpServletRequest request) throws LoginException {
         loginPwd = MD5Util.getMD5(loginPwd);

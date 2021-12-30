@@ -6,9 +6,11 @@
     <typeAliases>
         <!--设置别名-->
         <package name="org.example.crm.settings.domain"/>
+        <package name="org.example.crm.workbench.domain"/>
     </typeAliases>
 
     <mappers><!--设置mapper文件-->
         <package name="org.example.crm.settings.dao"/>
+        <!--<package name="org.example.crm.workbench.dao"/>-->
     </mappers>
 </configuration>

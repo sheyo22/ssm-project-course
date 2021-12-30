@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface UserDao {
     List<User> selectUsers(@Param("loginAct") String loginAct, @Param("loginPwd") String loginPwd);
+    List<User> selectAll();
 }
