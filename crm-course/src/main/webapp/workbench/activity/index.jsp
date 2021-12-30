@@ -18,10 +18,7 @@ request.getServerPort() + request.getContextPath() + "/";
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script type="text/javascript">
-
 	$(function(){
-
-		alert("jquery");
 		$("#addBtn").click(function () {
 			$.ajax({
 				url:"workbench/activity/getUserList.do",
@@ -41,7 +38,6 @@ request.getServerPort() + request.getContextPath() + "/";
 			})
 		})
 	})
-
 </script>
 </head>
 <body>
