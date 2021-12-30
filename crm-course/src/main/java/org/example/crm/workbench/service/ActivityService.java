@@ -1,9 +1,7 @@
 package org.example.crm.workbench.service;
 
-import org.example.crm.settings.domain.User;
-
-import java.util.List;
+import org.example.crm.workbench.domain.Activity;
 
 public interface ActivityService {
-
+    public int saveActivity(Activity activity);
 }

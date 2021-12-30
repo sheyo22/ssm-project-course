@@ -20,20 +20,50 @@ request.getServerPort() + request.getContextPath() + "/";
 <script type="text/javascript">
 	$(function(){
 		$("#addBtn").click(function () {
+			$(".time").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
 			$.ajax({
 				url:"workbench/activity/getUserList.do",
 				type:"get",
 				dataType:"json",
 				success:function (data) {
 					//每一个n就是一个对象
-					alert("ajax")
 					var html
 					$.each(data,function (i,n) {
 						html+="<option value='"+n.id+"'>"+n.name+"</option>"
 					})
 					$("#create-marketActivityOwner").html(html)
-					$("create-marketActivityOwner").val(${user.id})
+					$("#create-marketActivityOwner").val("${user.id}")
 					$("#createActivityModal").modal("show")
+				}
+			})
+		})
+		$("#saveBtn").click(function () {
+			$.ajax({
+				url: "workbench/activity/save.do",
+				type: "post",
+				data: {
+					"owner": $.trim($("#create-owner")),
+					"name": $.trim($("#create-name")),
+					"startDate": $.trim($("#create-startDate")),
+					"endDate": $.trim($("#create-endDate")),
+					"cost": $.trim($("#create-cost")),
+					"description": $.trim($("#create-description"))
+				},
+				dataType: "json",
+				success: function (data) {
+					if(data.success){
+						//刷新市场活动信息列表(局部刷新)
+						$("#createActivityModal").modal("hide")
+					}else {
+						alert("添加市场活动失败")
+					}
 				}
 			})
 		})
@@ -59,7 +89,7 @@ request.getServerPort() + request.getContextPath() + "/";
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-marketActivityOwner">
+								<select class="form-control" id="create-owner">
 								  <option>zhangsan</option>
 								  <option>lisi</option>
 								  <option>wangwu</option>
@@ -67,18 +97,18 @@ request.getServerPort() + request.getContextPath() + "/";
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="create-marketActivityName">
+                                <input type="text" class="form-control" id="create-name">
                             </div>
 						</div>
 						
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control time" id="create-startDate" readonly>
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control time" id="create-endDate" readonly>
 							</div>
 						</div>
                         <div class="form-group">
@@ -91,7 +121,7 @@ request.getServerPort() + request.getContextPath() + "/";
 						<div class="form-group">
 							<label for="create-describe" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						
@@ -100,7 +130,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button id="saveBtn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
 				</div>
 			</div>
 		</div>

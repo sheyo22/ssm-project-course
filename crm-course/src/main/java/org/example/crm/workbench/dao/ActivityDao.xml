@@ -2,14 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="接口全路径">
-    <insert id="方法名">
-        insert into student
-        values (#{id}, #{name}, #{email}, #{age})
+<mapper namespace="org.example.crm.workbench.dao.ActivityDao">
+    <insert id="insertActivity">
+        insert into tbl_activity
+        values (#{id}, #{owner}, #{name}, #{startDate},#{endDate},#{cost},#{description},#{creatTime},#{createBy},#{createTime},#{createBy})
     </insert>
-    <select id="selectStudent" resultType="org.example.domain.Student">
-        select *
-        from student
-        order by id
-    </select>
 </mapper>
