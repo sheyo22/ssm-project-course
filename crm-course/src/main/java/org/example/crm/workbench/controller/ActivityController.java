@@ -1,9 +1,12 @@
 package org.example.crm.workbench.controller;
 
+import org.example.crm.exception.DeleteException;
 import org.example.crm.settings.domain.User;
 import org.example.crm.settings.service.UserService;
 import org.example.crm.utils.DateTimeUtil;
 import org.example.crm.utils.UUIDUtil;
+import org.example.crm.vo.PaginationVO;
+import org.example.crm.vo.ReviceVO;
 import org.example.crm.workbench.domain.Activity;
 import org.example.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Controller;
@@ -25,10 +28,9 @@ public class ActivityController {
     @RequestMapping("/workbench/activity/getUserList.do")
     @ResponseBody
     public List<User> getUserList(){
-        System.out.println("getUserList()");
         return userService.selectAll();
     }
-    @RequestMapping("/workbench/activity/save.do")
+    @RequestMapping(value = "/workbench/activity/save.do")
     @ResponseBody
     public Map doSave(Activity activity, HttpServletRequest request){
         Map re = new HashMap();
@@ -42,5 +44,16 @@ public class ActivityController {
         else
             re.put("success",false);
         return re;
+    }
+    @RequestMapping("/workbench/activity/pageList.do")
+    @ResponseBody
+    public PaginationVO<Activity> doPageList(Activity activity, Integer pageNo, Integer pageSize){
+        int skipCount = (pageNo-1)*pageSize;
+        return activityService.selectPageList(activity,skipCount,pageSize);
+    }
+    @RequestMapping("/workbench/activity/deleteActivities.do")
+    @ResponseBody
+    public ReviceVO doDeleteActivities(String[] ids) throws DeleteException {
+        return activityService.deleteActivities(ids);
     }
 }

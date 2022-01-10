@@ -16,7 +16,7 @@
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-        <property name="basePackage" value="org.example.crm.settings.dao"/>
+        <property name="basePackage" value="org.example.crm.settings.dao,org.example.crm.workbench.dao"/>
     </bean>
     <context:component-scan base-package="org.example.crm.settings.service"/>
     <context:component-scan base-package="org.example.crm.workbench.service"/>
