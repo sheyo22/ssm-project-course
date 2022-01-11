@@ -68,4 +68,7 @@
             #{id}
         </foreach>
     </delete>
+    <select id="selectActivity" resultType="Activity">
+        select * from tbl_activity where id=#{activityId}
+    </select>
 </mapper>

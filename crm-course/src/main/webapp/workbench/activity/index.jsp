@@ -118,19 +118,40 @@ request.getServerPort() + request.getContextPath() + "/";
 			var $activities = $("input[name='xz']:checked");
 			if($activities.length==1){
 				$.ajax({
-					url:"workbench/activity/deleteActivities.do",
+					url:"workbench/activity/editActivity.do",
 					type:"get",
 					data:{
-						id:$activities.val()
+						activityId:$activities.val()
 					},
 					dataType:"json",
 					success:function (data) {
-
+						var html;
+						$.each(data.userList,function (i,n) {
+							html+="<option id='"+n.id+"'>"+n.name+"</option>"
+						})
+						$("#edit-marketActivityOwner").html(html);
+						$("#edit-marketActivityName").val(data.activity.name);
+						$("#edit-startTime").val(data.activity.startDate);
+						$("#edit-endTime").val(data.activity.endDate);
+						$("#edit-cost").val(data.activity.cost);
+						$("#edit-describe").val(data.activity.description);
+						$("#editActivityModal").modal("show");
 					}
 				})
 			}else {
 				alert("必须选择一条市场活动")
 			}
+		})
+		$("#updateBtn").click(function () {
+			$.ajax({
+				url:"",
+				type:"post",
+				data:{},
+				dataType:"json",
+				success:function () {
+
+				}
+			})
 		})
 	})
 	function pageList(pageNo,pageSize) {
@@ -288,11 +309,11 @@ request.getServerPort() + request.getContextPath() + "/";
 						<div class="form-group">
 							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+								<input type="text" class="form-control time" id="edit-startTime" value="2020-10-10" readonly>
 							</div>
 							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+								<input type="text" class="form-control time" id="edit-endTime" value="2020-10-20" readonly>
 							</div>
 						</div>
 						
@@ -306,7 +327,8 @@ request.getServerPort() + request.getContextPath() + "/";
 						<div class="form-group">
 							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+								<!--对textarea的取值和赋值应当使用val()方法-->
+								<textarea class="form-control" rows="3" id="edit-describe"></textarea>
 							</div>
 						</div>
 						
@@ -315,7 +337,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="updateBtn">更新</button>
 				</div>
 			</div>
 		</div>

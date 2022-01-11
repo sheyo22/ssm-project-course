@@ -56,4 +56,16 @@ public class ActivityController {
     public ReviceVO doDeleteActivities(String[] ids) throws DeleteException {
         return activityService.deleteActivities(ids);
     }
+    @RequestMapping("/workbench/activity/editActivity.do")
+    @ResponseBody
+    public Map<String, Object> doEditActivity(String activityId){
+        return activityService.getEditInfo(activityId);
+    }
+    @RequestMapping("/workbench/activity/updateActivity.do")
+    @ResponseBody
+    public ReviceVO doUpdateActivity(Activity activity,HttpServletRequest request){
+        User user= (User) request.getSession().getAttribute("user");
+        activity.setEditBy(user.getName());
+        return activityService.updateActivity(activity);
+    }
 }

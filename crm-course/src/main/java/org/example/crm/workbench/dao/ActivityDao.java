@@ -10,4 +10,6 @@ public interface ActivityDao {
     List<Activity> selectPageList(@Param(value = "activity") Activity activity, @Param("skipCount") int skipCount,@Param("pageSize") int pageSize);
     int totalCount(Activity activity);
     int delete(String[] ids);
+    Activity selectActivity(String activityId);
+    int updateActivity(Activity activity);
 }
