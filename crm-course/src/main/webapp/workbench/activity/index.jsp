@@ -115,6 +115,14 @@ request.getServerPort() + request.getContextPath() + "/";
 			}
 		})
 		$("#editBtn").click(function () {
+			$(".time").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
 			var $activities = $("input[name='xz']:checked");
 			if($activities.length==1){
 				$.ajax({
@@ -127,8 +135,9 @@ request.getServerPort() + request.getContextPath() + "/";
 					success:function (data) {
 						var html;
 						$.each(data.userList,function (i,n) {
-							html+="<option id='"+n.id+"'>"+n.name+"</option>"
+							html+="<option value='"+n.id+"'>"+n.name+"</option>"
 						})
+						$("#edit-id").val(data.activity.id);
 						$("#edit-marketActivityOwner").html(html);
 						$("#edit-marketActivityName").val(data.activity.name);
 						$("#edit-startTime").val(data.activity.startDate);
@@ -144,12 +153,21 @@ request.getServerPort() + request.getContextPath() + "/";
 		})
 		$("#updateBtn").click(function () {
 			$.ajax({
-				url:"",
+				url:"workbench/activity/updateActivity.do",
 				type:"post",
-				data:{},
+				data:{
+					"id":$.trim($("#edit-id").val()),
+					"owner": $.trim($("#edit-marketActivityOwner").val()),
+					"name": $.trim($("#edit-marketActivityName").val()),
+					"startDate": $.trim($("#edit-startTime").val()),
+					"endDate": $.trim($("#edit-endTime").val()),
+					"cost": $.trim($("#edit-cost").val()),
+					"description": $.trim($("#edit-describe").val())
+				},
 				dataType:"json",
-				success:function () {
-
+				success:function (data) {
+					pageList(1,2);
+					$("input[name='qx']").prop("checked",false);
 				}
 			})
 		})
@@ -176,7 +194,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				$.each(data.pageList,function (i,n) {
 					html += '<tr class="active">';
 					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+n.name+'</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/getActivityInfo.do?activityId='+n.id+'\';">'+n.name+'</a></td>';
 					html += '<td>'+n.owner+'</td>';
 					html += '<td>'+n.startDate+'</td>';
 					html += '<td>'+n.endDate+'</td>';
@@ -331,7 +349,7 @@ request.getServerPort() + request.getContextPath() + "/";
 								<textarea class="form-control" rows="3" id="edit-describe"></textarea>
 							</div>
 						</div>
-						
+						<input type="hidden" id="edit-id">
 					</form>
 					
 				</div>
@@ -420,7 +438,7 @@ request.getServerPort() + request.getContextPath() + "/";
 						</tr>
                         <tr class="active">
                             <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
+                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>
                             <td>zhangsan</td>
                             <td>2020-10-10</td>
                             <td>2020-10-20</td>

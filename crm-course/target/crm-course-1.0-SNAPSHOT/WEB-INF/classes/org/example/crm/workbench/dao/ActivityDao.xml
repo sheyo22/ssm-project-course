@@ -71,4 +71,14 @@
     <select id="selectActivity" resultType="Activity">
         select * from tbl_activity where id=#{activityId}
     </select>
+    <update id="updateActivity">
+        update tbl_activity set owner = #{owner}, name = #{name}, startDate = #{startDate}, endDate = #{endDate}, cost = #{cost},
+                                description = #{description}, editTime = #{editTime}, editBy = #{editBy}
+        where id = #{id}
+    </update>
+    <select id="selectActivityWithName" resultType="Activity">
+        select a.id, u.name as owner, a.name, a.startDate, a.endDate, a.cost, a.description, a.createTime, a.createBy, a.editTime, a.editBy from tbl_activity a
+            join tbl_user u on u.id=a.owner
+        where a.id = #{activityId}
+    </select>
 </mapper>

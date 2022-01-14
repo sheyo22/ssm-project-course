@@ -2,6 +2,7 @@ package org.example.crm.workbench.dao;
 
 import org.apache.ibatis.annotations.Param;
 import org.example.crm.workbench.domain.Activity;
+import org.example.crm.workbench.domain.ActivityRemark;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface ActivityDao {
     int delete(String[] ids);
     Activity selectActivity(String activityId);
     int updateActivity(Activity activity);
+    Activity selectActivityWithName(String activityId);
 }

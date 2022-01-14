@@ -3,13 +3,14 @@ package org.example.crm.workbench.service.impl;
 import org.example.crm.exception.DeleteException;
 import org.example.crm.exception.UpdateException;
 import org.example.crm.settings.dao.UserDao;
-import org.example.crm.settings.domain.User;
 import org.example.crm.utils.DateTimeUtil;
+import org.example.crm.vo.ReviseDomainVO;
 import org.example.crm.vo.PaginationVO;
-import org.example.crm.vo.ReviceVO;
+import org.example.crm.vo.ReviseVO;
 import org.example.crm.workbench.dao.ActivityDao;
 import org.example.crm.workbench.dao.ActivityRemarkDao;
 import org.example.crm.workbench.domain.Activity;
+import org.example.crm.workbench.domain.ActivityRemark;
 import org.example.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -45,7 +46,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = DeleteException.class)
-    public ReviceVO deleteActivities(String[] ids) throws DeleteException{
+    public ReviseVO deleteActivities(String[] ids) throws DeleteException{
         int remakeCount = activityRemarkDao.getCount(ids);
         boolean success = activityRemarkDao.delete(ids)==remakeCount;
         if(!success){
@@ -55,7 +56,7 @@ public class ActivityServiceImpl implements ActivityService {
         if(!success){
             throw new DeleteException("删除市场活动错误");
         }
-        ReviceVO res = new ReviceVO();
+        ReviseVO res = new ReviseVO();
         res.setSuccess(true);
         res.setTotal(ids.length);
         return res;
@@ -69,14 +70,52 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = UpdateException.class)
-    public ReviceVO updateActivity(Activity activity) {
+    public ReviseVO updateActivity(Activity activity) {
         activity.setEditTime(DateTimeUtil.getSysTime());
         if(!(activityDao.updateActivity(activity)==1)){
             throw new UpdateException("修改数据失败");
         }
-        ReviceVO re = new ReviceVO();
+        ReviseVO re = new ReviseVO();
         re.setTotal(1);
         re.setSuccess(true);
+        return re;
+    }
+
+    @Override
+    public Activity getActivityInfo(String activityId) {
+        return activityDao.selectActivityWithName(activityId);
+    }
+
+    @Override
+    public List<ActivityRemark> getActivityRemarkList(String activityId) {
+        return activityRemarkDao.select(activityId);
+    }
+
+    @Override
+    public ReviseVO deleteActivityRemark(String id) {
+        ReviseVO re = new ReviseVO();
+        re.setSuccess(activityRemarkDao.deleteById(id)==1);
+        re.setTotal(1);
+        return re;
+    }
+
+    @Override
+    public ReviseDomainVO saveActivityRemark(ActivityRemark activityRemark) {
+        ReviseDomainVO re = new ReviseDomainVO();
+        if(activityRemarkDao.insertActivityRemark(activityRemark)==1){
+            re.setSuccess(true);
+            re.setDomain(activityRemark);
+        }else {
+            throw new RuntimeException();
+        }
+        return re;
+    }
+
+    @Override
+    public ReviseDomainVO updateActivityRemark(ActivityRemark activityRemark) {
+        ReviseDomainVO re = new ReviseDomainVO();
+        re.setSuccess(activityRemarkDao.updateActivityRemark(activityRemark)==1);
+        re.setDomain(activityRemark);
         return re;
     }
 }
