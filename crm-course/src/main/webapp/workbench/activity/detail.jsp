@@ -21,6 +21,15 @@ request.getServerPort() + request.getContextPath() + "/";
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+        $(".time").datetimepicker({
+            minView: "month",
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
+
 		$("#remark").focus(function(){
 			if(cancelAndSaveBtnDefault){
 				//设置remarkDiv的高度为130px
@@ -92,14 +101,6 @@ request.getServerPort() + request.getContextPath() + "/";
 			$(this).children("span").css("color","#E6E6E6");
 		});
 		$("#editBtn").click(function () {
-			$(".time").datetimepicker({
-				minView: "month",
-				language:  'zh-CN',
-				format: 'yyyy-mm-dd',
-				autoclose: true,
-				todayBtn: true,
-				pickerPosition: "bottom-left"
-			});
 			$.ajax({
 				url:"workbench/activity/getUserList.do",
 				type:"get",

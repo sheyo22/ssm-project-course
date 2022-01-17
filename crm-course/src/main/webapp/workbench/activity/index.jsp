@@ -24,16 +24,16 @@ request.getServerPort() + request.getContextPath() + "/";
 
 	<script type="text/javascript">
 	$(function(){
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
 		pageList(1,2)
 		$("#addBtn").click(function () {
-			$(".time").datetimepicker({
-				minView: "month",
-				language:  'zh-CN',
-				format: 'yyyy-mm-dd',
-				autoclose: true,
-				todayBtn: true,
-				pickerPosition: "bottom-left"
-			});
 			$.ajax({
 				url:"workbench/activity/getUserList.do",
 				type:"get",
@@ -115,14 +115,6 @@ request.getServerPort() + request.getContextPath() + "/";
 			}
 		})
 		$("#editBtn").click(function () {
-			$(".time").datetimepicker({
-				minView: "month",
-				language:  'zh-CN',
-				format: 'yyyy-mm-dd',
-				autoclose: true,
-				todayBtn: true,
-				pickerPosition: "bottom-left"
-			});
 			var $activities = $("input[name='xz']:checked");
 			if($activities.length==1){
 				$.ajax({

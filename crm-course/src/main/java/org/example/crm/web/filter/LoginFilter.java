@@ -1,4 +1,4 @@
-package org.example.crm.filter;
+package org.example.crm.web.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
