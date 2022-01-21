@@ -4,8 +4,125 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.example.crm.workbench.dao.ClueDao">
-	
-	
+	<insert id="saveClue">
+        insert into tbl_clue(
+            id,
+            fullname,
+            appellation,
+            owner,
+            company,
+            job,
+            email,
+            phone,
+            website,
+            mphone,
+            state,
+            source,
+            createBy,
+            createTime,
+            editBy,
+            editTime,
+            description,
+            contactSummary,
+            nextContactTime,
+            address
+        ) values (
+            #{id},
+            #{fullname},
+            #{appellation},
+            #{owner},
+            #{company},
+            #{job},
+            #{email},
+            #{phone},
+            #{website},
+            #{mphone},
+            #{state},
+            #{source},
+            #{createBy},
+            #{createTime},
+            #{editBy},
+            #{editTime},
+            #{description},
+            #{contactSummary},
+            #{nextContactTime},
+            #{address}
+            )
+    </insert>
+	<select id="selectPageList" resultType="Clue">
+        select
+        c.id,
+        c.fullname,
+        c.appellation,
+        u.name as owner,
+        c.company,
+        c.job,
+        c.email,
+        c.phone,
+        c.website,
+        c.mphone,
+        c.state,
+        c.source,
+        c.createBy,
+        c.createTime,
+        c.editBy,
+        c.editTime,
+        c.description,
+        c.contactSummary,
+        c.nextContactTime,
+        c.address
+        from tbl_clue c join tbl_user u on c.owner=u.id
+        <where>
+            <if test="clue.appellation!=null and clue.appellation!=''">
+                fullname like '%${clue.appellation}%' or appellation like '%${clue.appellation}%'
+            </if>
+            <if test="clue.company!=null and clue.company!=''">
+                and company like '%${clue.company}%'
+            </if>
+            <if test="clue.phone!=null and clue.phone!=''">
+                and phone like '%${clue.phone}%'
+            </if>
+            <if test="clue.mphone!=null and clue.mphone!=''">
+                and mphone like '%${clue.mphone}%'
+            </if>
+            <if test="clue.source!=null and clue.source!=''">
+                and source like '%${clue.source}%'
+            </if>
+            <if test="clue.owner!=null and clue.owner!=''">
+                and owner like '%${clue.owner}%'
+            </if>
+            <if test="clue.state!=null and clue.state!=''">
+                and state like '%${clue.state}%'
+            </if>
+        </where>
+        order by nextContactTime limit #{skipCount},#{pageSize}
+    </select>
+    <select id="totalCount" resultType="Integer">
+        select count(*) from tbl_clue
+        <where>
+            <if test="appellation!=null and appellation!=''">
+                fullname like '%${appellation}%' or appellation like '%${appellation}%'
+            </if>
+            <if test="company!=null and company!=''">
+                and company like '%${company}%'
+            </if>
+            <if test="phone!=null and phone!=''">
+                and phone like '%${phone}%'
+            </if>
+            <if test="mphone!=null and mphone!=''">
+                and mphone like '%${mphone}%'
+            </if>
+            <if test="source!=null and source!=''">
+                and source like '%${source}%'
+            </if>
+            <if test="owner!=null and owner!=''">
+                and owner like '%${owner}%'
+            </if>
+            <if test="state!=null and state!=''">
+                and state like '%${state}%'
+            </if>
+        </where>
+    </select>
   	
 </mapper>
 

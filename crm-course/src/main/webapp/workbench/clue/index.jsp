@@ -34,38 +34,141 @@ request.getServerPort() + request.getContextPath() + "/";
 				url: "workbench/clue/getUserList.do",
 				dataType:"json",
 				success: function (data) {
+					$("#create-owner").val("");
+					$("#create-company").val("");
+					$("#create-surname").val("");
+					$("#create-job").val("");
+					$("#create-email").val("");
+					$("#create-phone").val("");
+					$("#create-website").val("");
+					$("#create-mphone").val("");
+					$("#create-nextContactTime").val("");
+					$("#create-description").val("");
+					$("#create-contactSummary").val("");
+					$("#create-address").val("");
 					var html="";
 					$.each(data,function (i,n) {
 						html += "<option value='"+n.id+"'>"+n.name+"</option>";
 					})
-					$("#create-clueOwner").html(html);
-					$("#create-clueOwner").val("${user.id}");
+					$("#create-owner").html(html);
+					$("#create-owner").val("${user.id}");
 				}
 			})
-
 			$("#createClueModal").modal("show");
 		})
 		$("#saveBtn").click(function () {
 			$.ajax({
-				url: "",
+				url: "workbench/clue/saveClue.do",
 				type: "post",
 				data: {
-					"owner": $("#create-clueOwner").val(),
-					""
+					"owner": $("#create-owner").val(),
+					"company": $("#create-company").val(),
+					"appellation": $("#create-call").val(),
+					"fullname": $("#create-surname").val(),
+					"job": $("#create-job").val(),
+					"email": $("#create-email").val(),
+					"phone": $("#create-phone").val(),
+					"website": $("#create-website").val(),
+					"mphone": $("#create-mphone").val(),
+					"state": $("#create-state").val(),
+					"source": $("#create-source").val(),
+					"nextContactTime": $("#create-nextContactTime").val(),
+					"description": $("#create-description").val(),
+					"contactSummary": $("#create-contactSummary").val(),
+					"address": $("#create-address").val(),
 				},
 				dataType: "json",
 				success: function (data) {
-
+					if(data.success){
+						pageList(1,2);
+						$("#createClueModal").modal("hide");
+					}else {
+						alert("添加失败");
+					}
 				}
 			})
-			$("#createClueModal").modal("hide");
 		})
+		$("#searchBtn").click(function () {
+			$("#hidden-name").val($("#search-name").val());
+			$("#hidden-owner").val($("#search-owner").val());
+			$("#hidden-company").val($("#search-company").val());
+			$("#hidden-source").val($("#search-source").val());
+			$("#hidden-phone").val($("#search-phone").val());
+			$("#hidden-mphone").val($("#search-mphone").val());
+			$("#hidden-state").val($("#search-state").val());
+			pageList(1,2);
+		})
+		pageList(1,2);
 	});
+
+	function pageList(pageNo,pageSize) {
+		$.ajax({
+			url: "workbench/clue/pageList.do",
+			data: {
+				"pageNo":pageNo,
+				"pageSize":pageSize,
+				"appellation":$.trim($("#search-name").val()),
+				"company":$.trim($("#search-company").val()),
+				"phone":$.trim($("#search-phone").val()),
+				"source":$("#search-source").val(),
+				"state": $("#search--state").val(),
+				"mphone": $.trim($("#search-mphone").val()),
+				"owner": $.trim($("#search-owner").val())
+			},
+			type: "get",
+			dataType: "json",
+			success: function (data) {
+				$("#search-name").val($("#hidden-name").val());
+				$("#search-owner").val($("#hidden-owner").val());
+				$("#search-company").val($("#hidden-company").val());
+				$("#search-source").val($("#hidden-source").val());
+				$("#search-phone").val($("#hidden-phone").val());
+				$("#search-mphone").val($("#hidden-mphone").val());
+				$("#search-state").val($("#hidden-state").val());
+				var html="";
+				$.each(data.pageList,function (i,n) {
+					html += '<tr class="active">';
+					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/getClueInfo.do?id='+n.id+'\';">'+n.fullname+n.appellation+'</a></td>';
+					html += '<td>'+n.company+'</td>';
+					html += '<td>'+n.phone+'</td>';
+					html += '<td>'+n.mphone+'</td>';
+					html += '<td>'+n.source+'</td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.state+'</td>';
+					html += '</tr>';
+				})
+				$("#clueTable").html(html);
+				$("#cluePage").bs_pagination({
+					currentPage: pageNo,
+					rowsPerPage: pageSize,
+					maxRowsPerPage: 20,
+					totalPages: Math.ceil(data.total/pageSize),
+					totalRows: data.total,
+					visiblePageLinks: 3,
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+
+			}
+		})
+	}
 	
 </script>
 </head>
 <body>
-
+	<input type="hidden" id="hidden-name">
+	<input type="hidden" id="hidden-company">
+	<input type="hidden" id="hidden-phone">
+	<input type="hidden" id="hidden-source">
+	<input type="hidden" id="hidden-owner">
+	<input type="hidden" id="hidden-mphone">
+	<input type="hidden" id="hidden-state">
 	<!-- 创建线索的模态窗口 -->
 	<div class="modal fade" id="createClueModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 90%;">
@@ -80,9 +183,9 @@ request.getServerPort() + request.getContextPath() + "/";
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-clueOwner">
+								<select class="form-control" id="create-owner">
 								  <option>zhangsan</option>
 								  <option>lisi</option>
 								  <option>wangwu</option>
@@ -136,9 +239,9 @@ request.getServerPort() + request.getContextPath() + "/";
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control" id="create-mphone">
 							</div>
-							<label for="create-status" class="col-sm-2 control-label">线索状态</label>
+							<label for="create-state" class="col-sm-2 control-label">线索状态</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-status">
+								<select class="form-control" id="create-state">
 									<c:forEach items="${clueState}" var="a">
 										<option value="${a.value}">${a.text}</option>
 									</c:forEach>
@@ -163,9 +266,9 @@ request.getServerPort() + request.getContextPath() + "/";
 						
 
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">线索描述</label>
+							<label for="create-description" class="col-sm-2 control-label">线索描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						
@@ -215,9 +318,9 @@ request.getServerPort() + request.getContextPath() + "/";
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="edit-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="edit-clueOwner">
+								<select class="form-control" id="edit-owner">
 								  <option>zhangsan</option>
 								  <option>lisi</option>
 								  <option>wangwu</option>
@@ -293,9 +396,9 @@ request.getServerPort() + request.getContextPath() + "/";
 						</div>
 						
 						<div class="form-group">
-							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
+							<label for="edit-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">这是一条线索的描述信息</textarea>
+								<textarea class="form-control" rows="3" id="edit-description">这是一条线索的描述信息</textarea>
 							</div>
 						</div>
 						
@@ -358,28 +461,28 @@ request.getServerPort() + request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-company">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司座机</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-phone">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">线索来源</div>
-					  <select class="form-control">
+					  <select class="form-control" id="search-source">
 						  <c:forEach items="${source}" var="a">
 							  <option value="${a.value}">${a.text}</option>
 						  </c:forEach>
@@ -392,7 +495,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-owner">
 				    </div>
 				  </div>
 				  
@@ -401,14 +504,14 @@ request.getServerPort() + request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">手机</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-mphone">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">线索状态</div>
-					  <select class="form-control">
+					  <select class="form-control" id="search-state">
 						  <c:forEach items="${clueState}" var="a">
 							  <option value="${a.value}">${a.text}</option>
 						  </c:forEach>
@@ -416,7 +519,7 @@ request.getServerPort() + request.getContextPath() + "/";
 				    </div>
 				  </div>
 
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="searchBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -443,29 +546,14 @@ request.getServerPort() + request.getContextPath() + "/";
 							<td>线索状态</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.jsp';">李四先生</a></td>
-							<td>动力节点</td>
-							<td>010-84846003</td>
-							<td>12345678901</td>
-							<td>广告</td>
-							<td>zhangsan</td>
-							<td>已联系</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.jsp';">李四先生</a></td>
-                            <td>动力节点</td>
-                            <td>010-84846003</td>
-                            <td>12345678901</td>
-                            <td>广告</td>
-                            <td>zhangsan</td>
-                            <td>已联系</td>
-                        </tr>
+					<tbody id="clueTable">
+
 					</tbody>
 				</table>
+			</div>
+			<div style="height: 50px; position: relative;top: 30px;">
+				<div id="cluePage"></div>
+
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 60px;">
